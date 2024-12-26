@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber main"] 0 "main.bcf" "main.bbl" "main" 1735226664.58633 -1
-  "main.bcf" 1735226663.72695 107367 b71a194f9a7a9773ce6b7b78419ca202 "pdflatex"
+["biber main"] 0 "main.bcf" "main.bbl" "main" 1735249296.65373 -1
+  "main.bcf" 1735249296.32102 107367 b71a194f9a7a9773ce6b7b78419ca202 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1735226658.54702 "/home/eliaselof/Documents/Skola/EDAF35/Tex/main.tex" "main.pdf" "main" 1735226664.58732 0
+["pdflatex"] 1735249291.34683 "/home/eliaselof/Documents/Skola/EDAF35/Tex/main.tex" "main.pdf" "main" 1735249296.65467 0
   "/etc/texmf/web2c/texmf.cnf" 1735155450.23866 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/eliaselof/Documents/Skola/EDAF35/Tex/main.tex" 1735226657.32871 12166 1731a8202466d7db9d88e1421c234a7b ""
+  "/home/eliaselof/Documents/Skola/EDAF35/Tex/main.tex" 1735249285.81398 13562 a822418770220614fc1cb2eef8c19e85 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
@@ -108,10 +108,10 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1735155508.67194 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1735155542 8213413 b5226ea4047f7b311259509dd330af02 ""
   "img/pcb.png" 1735205035.24327 35019 716c9b82dea3c5e672c6002e4a1feab6 ""
-  "main.aux" 1735226663.70795 2830 52b9627140341fc8de70c4be33087f28 "pdflatex"
+  "main.aux" 1735249296.30802 3700 dde7ac6bf88fa529b4808bec7c22b928 "pdflatex"
   "main.bbl" 1735156873.54584 0 d41d8cd98f00b204e9800998ecf8427e "biber main"
-  "main.run.xml" 1735226663.73195 2274 f62d35a8846683be2ab9c4642824a8f7 "pdflatex"
-  "main.tex" 1735226657.32871 12166 1731a8202466d7db9d88e1421c234a7b ""
+  "main.run.xml" 1735249296.32502 2274 f62d35a8846683be2ab9c4642824a8f7 "pdflatex"
+  "main.tex" 1735249285.81398 13562 a822418770220614fc1cb2eef8c19e85 ""
   (generated)
   "main.aux"
   "main.bcf"

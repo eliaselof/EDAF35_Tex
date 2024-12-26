@@ -146,6 +146,50 @@ These models describes how to map user thread to kernel threads. User threads ar
     differences between the RMS and the EDF scheduler (Section 5.6.1 – 5.6.4 in Operating System Concepts)
 \end{itemize}
 
+\begin{enumerate}
+    \item When a process switches from the running state to the waiting state (for
+    example, as the result of an I/O request or an invocation of wait() for the
+    termination of a child process)
+    \item When a process switches from the running state to the ready state (for
+    example, when an interrupt occurs)
+    \item When a process switches from the waiting state to the ready state (for
+    example, at completion of I/O)
+    \item When a process terminates
+\end{enumerate}
+
+When scheduling takes place only under circumstances 1 and 4, we say that the scheduling scheme is non preemptive or cooperative.
+Otherwise, it is {\bf preemptive}. 
+Chatgpt says the following:
+\\ {\it Preemptive scheduling is a CPU scheduling method where the operating system can interrupt a running process to give the CPU to another process, usually with higher priority or urgency.
+In this system, the OS can stop a process and switch to another one, either after a fixed time slice (in round-robin scheduling) or if a higher-priority process needs the CPU.}
+
+\subsection{Scheduling Algorithms}
+
+\subsubsection{First-Come, First-Served Scheduling}
+
+
+\subsubsection{Shortest-Job-First Scheduling}
+
+
+
+\subsubsection{Round-Robin Scheduling}
+
+
+
+
+\subsubsection{Priority Scheduling}
+
+
+
+\subsubsection{Multilevel Queue Scheduling}
+
+
+
+\subsubsection{Multilevel Feedback Queue Scheduling}
+
+
+
+
 
 \section{Module 3.B - Synchronization}
 \subsection{Red Box}
