@@ -57,7 +57,7 @@
 
 
 
-The process can be in a number of different states, see figure \ref{fig:diapcb}.
+The process can be in a number of different states, see figure.
 
 \begin{figure}[H]
     \centering
@@ -159,34 +159,103 @@ These models describes how to map user thread to kernel threads. User threads ar
 
 When scheduling takes place only under circumstances 1 and 4, we say that the scheduling scheme is non preemptive or cooperative.
 Otherwise, it is {\bf preemptive}. 
+\\
+\\
 Chatgpt says the following:
 \\ {\it Preemptive scheduling is a CPU scheduling method where the operating system can interrupt a running process to give the CPU to another process, usually with higher priority or urgency.
 In this system, the OS can stop a process and switch to another one, either after a fixed time slice (in round-robin scheduling) or if a higher-priority process needs the CPU.}
 
 \subsection{Scheduling Algorithms}
 
-\subsubsection{First-Come, First-Served Scheduling}
+\subsubsection{First-Come, First-Served Scheduling (FCFS)}
+This is the simplest algorithm. With this scheme, the process that requests the
+CPU first is allocated the CPU first. The implementation of the FCFS policy is
+easily managed with a FIFO queue. When a process enters the ready queue, its
+PCB is linked onto the tail of the queue. When the CPU is free, it is allocated to
+the process at the head of the queue. The running process is then removed from
+the queue. The code for FCFS scheduling is simple to write and understand.
+On the negative side, the average waiting time under the FCFS policy is
+often quite long. {\bf Pro: simplest Con: Can have long wait times}.
+
+\subsubsection{Shortest-Job-First (SJF) Scheduling}
+Do the shortest job first. If to jobs take the same time FCFS is used to break the tie.
+The more appropriate term for this method is {\bf shortest-next-CPU-burst}, because scheduling depends on the length of the next CPU burst of
+a process, rather than its total length. 
 
 
-\subsubsection{Shortest-Job-First Scheduling}
+% Problem here!
+Although the SJF lagorithm is optimal, it cannot be implemented at the level of CPU scheduling, 
+as there is no way to know the length of the next CPU burst.
+One approach to this problem is to try to approximate SJF scheduling. We may
+not know the length of the next CPU burst, but we may be able to predict its
+value. We expect that the next CPU burst will be similar in length to the previous
+ones. By computing an approximation of the length of the next CPU burst, we
+can pick the process with the shortest predicted CPU burst.
 
 
 
-\subsubsection{Round-Robin Scheduling}
+{\bf Pro: less down time then FCFS Con: harder to implement.}
 
+ 
+{\bf Whats the difference between Job and CPU burst?}
 
+%Problem ends here!
+
+\subsubsection{Round-Robin (RR) Scheduling}
+
+Similar to FCFS but with preemption added. 
+
+To implement RR scheduling, we again treat the ready queue as a FIFO
+queue of processes. New processes are added to the tail of the ready queue.
+\\
+The CPU scheduler picks the first process from the ready queue, sets a timer to
+interrupt after 1 time quantum, and dispatches the process.
+One of two things will then happen. The process may have a CPU burst of
+less than 1 time quantum. In this case, the process itself will release the CPU
+voluntarily. The scheduler will then proceed to the next process in the ready
+queue. If the CPU burst of the currently running process is longer than 1 time
+quantum, the timer will go off and will cause an interrupt to the operating
+system. A context switch will be executed, and the process will be put at the
+tail of the ready queue. The CPU scheduler will then select the next process in
+the ready queue.
+\\
+
+{\bf Con: the average waiting time under RR is often long. Pro: Relatively simple.}
 
 
 \subsubsection{Priority Scheduling}
+
+SJF is a special case of the general priority-scheduling. 
+\\
+A priority is associated with each process, and the CPU is allocated to the process with the highest priority. Equal-priority processes are scheduled in
+FCFS order. An SJF algorithm is simply a priority algorithm where the priority
+(p) is the inverse of the (predicted) next CPU burst. The larger the CPU burst,
+the lower the priority, and vice versa.
+\\
+
+
+{\bf Con: different systems have different levels of priority, i.e. code is not portable.}
 
 
 
 \subsubsection{Multilevel Queue Scheduling}
 
+Separate queues for different priority levels. Often use RR per queue.
+\\
+{\bf Pro: you don't need to do an O(n) search to find the task with the highest priority.}
+
 
 
 \subsubsection{Multilevel Feedback Queue Scheduling}
 
+It's the same as Multilevel Queue Scheduling, but tasks can move between queues. 
+
+
+%the differences between process and system contention scopes
+\subsection{Contention Scope} %page 217
+
+
+\subsection{}
 
 
 
