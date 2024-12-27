@@ -1,1 +1,1 @@
-[See pdf]{main.pdf}
+[See pdf!](main.pdf)
