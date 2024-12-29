@@ -183,7 +183,6 @@ The more appropriate term for this method is {\bf shortest-next-CPU-burst}, beca
 a process, rather than its total length. 
 
 
-% Problem here!
 Although the SJF lagorithm is optimal, it cannot be implemented at the level of CPU scheduling, 
 as there is no way to know the length of the next CPU burst.
 One approach to this problem is to try to approximate SJF scheduling. We may
@@ -193,13 +192,11 @@ ones. By computing an approximation of the length of the next CPU burst, we
 can pick the process with the shortest predicted CPU burst.
 
 
-
 {\bf Pro: less down time then FCFS Con: harder to implement.}
 
  
 {\bf Whats the difference between Job and CPU burst?}
 
-%Problem ends here!
 
 \subsubsection{Round-Robin (RR) Scheduling}
 
@@ -251,11 +248,34 @@ Separate queues for different priority levels. Often use RR per queue.
 It's the same as Multilevel Queue Scheduling, but tasks can move between queues. 
 
 
-%the differences between process and system contention scopes
-\subsection{Contention Scope} %page 217
+
+\subsection{Differences between process and system contention scopes.} %page 217
+
+Process contention scope and system contention scope are two types of thread scheduling models used to determine 
+how threads compete for CPU time. They define the level at which threads contend for CPU 
+resources, either within a process or across the entire system.
 
 
-\subsection{}
+
+\subsubsection{Process Contention Scope (PCS)}
+
+\begin{itemize}
+    \item {\bf Scope:} Threads within the same process contend for CPU time only with other threads of that same process.
+    \item {\bf Scheduling:} Threads are scheduled based on the process's thread priority and its own internal scheduling policies. The OS doesn't consider other processes' threads when scheduling threads for a particular process.
+    \item {\bf Example:}Example: If two threads are running in a single process, they compete for CPU time only with each other, without interference from threads of other processes.
+\end{itemize}
+
+
+\subsubsection{System Contention Scope (SCS)}
+
+\begin{itemize}
+    \item {\bf Scope:} Threads from all processes in the system compete for CPU time against each other, regardless of the process they belong to.
+    \item {\bf Scheduling:} Threads are scheduled system-wide, with the OS considering all threads in the system, not just those within the same process.
+    \item {\bf Example:} Threads from different processes (e.g., Thread A from Process 1 and Thread B from Process 2) compete for CPU time on the same level, meaning the OS schedules them based on their priority relative to each other.
+\end{itemize}
+
+In short, {\bf PCS} is more localized within a process, while {\bf SCS} involves all threads in the system competing for CPU time.
+
 
 
 
@@ -268,6 +288,47 @@ It's the same as Multilevel Queue Scheduling, but tasks can move between queues.
     (Systems. 6.5 and 6.6 in Operating System Concepts – not the clearest explanation. Chapter 9, 10 in Linux Kernel
     development )
 \end{itemize}
+
+
+
+\subsection{Critical Section Problem}
+
+The critical-section problem is to design a protocol that the processes can use to 
+synchronize their activity so as to cooperatively share data. I.E, when one process is executing in it's
+critical section another process can't do the same.
+\\
+A solution to this problem must satisfy the following:
+
+\begin{enumerate}
+    \item {\bf Mutual exclusion.} If a process is executing in its critical section, then no
+    other processes can be executing in their critical sections.
+    \item {\bf Progress.} If no process is executing in its critical section and some pro-
+    cesses wish to enter their critical sections, then only those processes that
+    are not executing in their remainder sections can participate in deciding which 
+    will enter its critical section next, and this selection cannot be
+    postponed indefinitely.
+    \item {\bf Bounded waiting.} There exists a bound, or limit, on the number of times
+    that other processes are allowed to enter their critical sections after a
+    process has made a request to enter its critical section and before that
+    request is granted.
+\end{enumerate}
+
+
+%You must know the differences between Spinlocks, Semaphores and Mutexes in the context of Operating
+
+\subsection{Different types of locks}
+
+\begin{itemize}
+    \item {\bf Mutexes.} A mutex (mutual exclusion) lock is a synchronization mechanism that ensures only one thread can 
+    access a shared resource at a time, preventing race conditions. 
+    When a thread locks the mutex, others must wait until it is released, 
+    ensuring exclusive access and data integrity during concurrent operations.
+    \item {\bf Spinlocks.} A type of mutex lock where the process "spins" (busy-waits) for acquire. 
+    \item {\bf Semaphores.} A integer var that is access through two atomic operations: wait() and signal().
+\end{itemize}
+
+
+
 
 
 \subsection{Module 4 - Memory Management}
