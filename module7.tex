@@ -1,0 +1,71 @@
+\section{Module 7 - Protection and Security}
+\subsection{Red Box!}
+\begin{itemize}
+    \item You be able to describe what a domain of protection is and give examples of some
+    different domains (user, process and procedure) and
+    objects. (Section 17.4 in Operating System Concepts)
+    \item You should be able to describe what the access matrix is, how it relates to domains of protection and how it can be implemented – you will not be asked about
+    the lock and key mechanism, and only on the basics of capability lists (Section 17.5 and 17.6 in Operating System Concepts)
+    \item Maintaining system security is very complicated and understanding this could require a whole courses – you will
+    not be asked on this in the exam
+\end{itemize}
+
+\subsection{Domain of Protection}
+
+\paragraph{What is a Domain of Protection?}
+A domain of protection is a set of access rights or privileges that define the operations a particular entity (such as a user, process, or procedure) is allowed to perform on objects within the system. These domains establish the boundaries of security and control how different entities interact with system resources.
+
+\paragraph{Examples of Domains and Objects}
+
+\begin{itemize}
+    \item \textbf{Domains:}
+    \begin{itemize}
+        \item \textit{User Domain:} This domain includes the rights granted to a specific user, such as the ability to read, write, or execute files. A user domain is typically isolated from others for security purposes.
+        \item \textit{Process Domain:} A process domain defines the permissions of a running process. For example, it may allow a process to access specific memory regions, system resources, or execute particular system calls.
+        \item \textit{Procedure Domain:} A procedure domain is a set of permissions granted to a procedure or function within a process. It typically controls access to certain resources or operations during the execution of the procedure.
+    \end{itemize}
+    
+    \item \textbf{Objects:}
+    \begin{itemize}
+        \item \textit{Files:} Files are common objects that domains can access, with operations such as read, write, and execute.
+        \item \textit{Memory Regions:} Memory blocks allocated to a process, which it can read from or write to based on its domain.
+        \item \textit{Devices:} Hardware devices such as printers, network adapters, or disk drives that a domain may access based on permissions.
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Access Matrix and Domains of Protection}
+
+\paragraph{What is the Access Matrix?}
+The access matrix is a model used to describe the rights and permissions that subjects (such as users, processes, or procedures) have over objects (such as files, memory, or devices). It represents the relationship between subjects, objects, and the corresponding access rights.
+
+The matrix is typically represented as:
+\[
+    \text{Access Matrix} = \{S_1, S_2, \dots, S_n\} \times \{O_1, O_2, \dots, O_m\}
+\]
+where:
+\begin{itemize}
+    \item $S_i$ represents a subject (such as a user or process).
+    \item $O_j$ represents an object (such as a file or a memory location).
+    \item The entries in the matrix specify the operations (read, write, execute, etc.) that a subject can perform on an object.
+\end{itemize}
+
+\paragraph{Access Matrix and Domains of Protection}
+The access matrix is closely related to domains of protection. Each subject's domain specifies a set of rights they have over various objects. The access matrix provides a clear and structured representation of these rights, ensuring that subjects are granted only the operations they are authorized to perform on objects.
+
+\paragraph{Implementation of the Access Matrix}
+There are two common ways to implement the access matrix:
+
+\begin{itemize}
+    \item \textbf{Access Control Lists (ACLs):}
+    \begin{itemize}
+        \item Each object has a list of subjects and the operations they are allowed to perform on it.
+        \item For example, a file might have an ACL that lists users with read/write access.
+    \end{itemize}
+    
+    \item \textbf{Capability Lists:}
+    \begin{itemize}
+        \item Each subject maintains a list of objects and the operations they are allowed to perform on those objects.
+        \item For example, a user might have a capability list specifying which files they can read or write.
+    \end{itemize}
+\end{itemize}

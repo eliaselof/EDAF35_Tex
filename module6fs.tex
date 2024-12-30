@@ -1,0 +1,240 @@
+\section{Module 6 - File System}
+\subsection{Red Box}
+\begin{itemize}
+    \item You should understand these two different access methods, {\bf sequential access} and {\bf direct access}.  (13.2.1 and 13.2.2 in Operating System Concepts)
+    \item You should understand what directories are and how they make it possible to organise and access files, i.e, single-level, two-level, tree-structured, acyclic-graph and general-graph. (13.3 in
+    Operating System Concepts)
+    \item This structure is discussed in the textbook but not very clearly. Try and understand it, but we will not ask
+    questions discussing it directly (Section 14.1 in Operating System Concepts).
+    \item Need to that know that files are represented as blocks and what the FCB/Inode is (Section 14.1 in Operating
+    System Concepts).
+    \item Need to understand what these two tables (per-process open-file table and per-process open-file table) are and how calls like open() and read() use and update this table
+    (Section 14.2.2 in Operating System Concepts)
+    \item Understand these three different allocation methods (contiguous allocation, linked allocation and indexed allocation) and their relative advantages and disadvantages (Section
+    14.4 in Operating System Concepts)
+    \item Be able to calculate maximum file size a scheme like this can store (indexed allocation) (Section 14.4.3 in Operating System Concepts)
+    \item Understand these two algorithms (bit vector and linked list) and their advantages and disadvantages (Section 14.5.1 and 14.5.2 in
+    Operating System Concepts)
+\end{itemize}
+
+
+
+\subsection{Sequential and Direct Access}
+
+\paragraph{Sequential Access}
+\begin{itemize}
+    \item Data is read or written in a sequential order, starting from the beginning of the file.
+    \item It is efficient for tasks like reading logs or processing data in a linear fashion.
+    \item Examples: Tape drives, streaming data.
+\end{itemize}
+
+\paragraph{Direct Access (Random Access)}
+\begin{itemize}
+    \item Data can be accessed at any location within the file without reading previous data.
+    \item Efficient for tasks requiring quick access to specific data points.
+    \item Examples: Hard drives, databases.
+\end{itemize}
+
+
+
+\subsection{Directory Structures}
+
+\paragraph{What are Directories?}
+Directories are used to organize and manage files within a file system. They allow for efficient file storage, access, and hierarchical organization.
+
+\paragraph{Directory Structures}
+Different directory structures offer various ways to organize files:
+
+\begin{itemize}
+    \item \textbf{Single-Level Directory:}
+    \begin{itemize}
+        \item All files are stored in a single directory.
+        \item Simple but inefficient for large numbers of files.
+    \end{itemize}
+    
+    \item \textbf{Two-Level Directory:}
+    \begin{itemize}
+        \item A separate directory is created for each user, but all files within each user's directory are stored at the same level.
+        \item Offers basic separation of user data.
+    \end{itemize}
+    
+    \item \textbf{Tree-Structured Directory:}
+    \begin{itemize}
+        \item Directories can contain both files and subdirectories, forming a hierarchical tree.
+        \item Most common structure, allows for efficient file organization.
+    \end{itemize}
+    
+    \item \textbf{Acyclic-Graph Directory:}
+    \begin{itemize}
+        \item Allows directories to contain links to other directories, but no cycles (no directory can be its own ancestor).
+        \item Supports shared directories and files.
+    \end{itemize}
+    
+    \item \textbf{General-Graph Directory:}
+    \begin{itemize}
+        \item Allows directories to contain cycles (directories can be linked to themselves or other directories).
+        \item More flexible but can lead to complex management and potential cycles.
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Files and Metadata}
+
+\paragraph{File Representation as Blocks}
+Files are stored in the file system as a collection of blocks. A block is a fixed-size unit of data storage, typically ranging from 512 bytes to several kilobytes, used to store the contents of files on a disk.
+
+\paragraph{FCB (File Control Block)}
+\begin{itemize}
+    \item The FCB is a data structure used to store metadata about a file in a system that supports traditional file systems.
+    \item It contains information such as file name, file size, file location, and access permissions.
+    \item Primarily used in older file systems like FAT (File Allocation Table).
+\end{itemize}
+
+\paragraph{Inode}
+\begin{itemize}
+    \item The inode is a data structure used in Unix-based file systems to store metadata about a file.
+    \item It contains information such as file type, file size, ownership, access permissions, and pointers to the data blocks that store the file contents.
+    \item Inodes provide a more efficient method of managing files in a system with many files.
+\end{itemize}
+
+
+\subsection{Open-File Tables}
+
+\paragraph{Per-Process Open-File Table}
+\begin{itemize}
+    \item The per-process open-file table is a table maintained by the operating system for each process.
+    \item It contains information about the files that the process has opened, such as the file descriptor, file offset, and access mode (read/write).
+    \item When a process opens a file using the \texttt{open()} system call, a new entry is added to this table.
+\end{itemize}
+
+\paragraph{System-Wide Open-File Table}
+\begin{itemize}
+    \item The system-wide open-file table is a global table maintained by the operating system.
+    \item It keeps track of all open files across all processes, storing information like the file location and the number of file descriptors pointing to the file.
+    \item When a process opens a file, the operating system checks this table to see if the file is already open and, if so, updates the reference count.
+\end{itemize}
+
+\paragraph{File Operations (open(), read())}
+\begin{itemize}
+    \item \texttt{open()}: When a file is opened, the operating system updates the per-process open-file table with an entry for the file. If the file is already open, it retrieves the file descriptor from the system-wide table and adds it to the process's table.
+    \item \texttt{read()}: When a process reads a file, the operating system uses the file descriptor from the per-process open-file table to find the file’s entry in the system-wide table. The file offset and other information are used to read data from the file.
+\end{itemize}
+
+
+\subsection*{Types of File Allocation Methods}
+
+\paragraph{Contiguous Allocation}
+\begin{itemize}
+    \item Files are stored in contiguous blocks on the disk.
+    \item Advantages:
+    \begin{itemize}
+        \item Fast access to files due to sequential storage.
+        \item Simple to implement.
+    \end{itemize}
+    \item Disadvantages:
+    \begin{itemize}
+        \item External fragmentation as files grow or shrink.
+        \item Difficult to allocate space for large files if contiguous space is unavailable.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Linked Allocation}
+\begin{itemize}
+    \item Files are stored in scattered blocks, with each block pointing to the next.
+    \item Advantages:
+    \begin{itemize}
+        \item Eliminates external fragmentation.
+        \item Easy to expand files without needing contiguous space.
+    \end{itemize}
+    \item Disadvantages:
+    \begin{itemize}
+        \item Slower access due to pointer traversal.
+        \item Additional overhead for storing pointers in each block.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Indexed Allocation}
+\begin{itemize}
+    \item A table (index) is used to keep track of the block locations for each file.
+    \item Advantages:
+    \begin{itemize}
+        \item Eliminates fragmentation (both internal and external).
+        \item Efficient access as all blocks can be accessed directly using the index.
+    \end{itemize}
+    \item Disadvantages:
+    \begin{itemize}
+        \item Requires extra space for the index table.
+        \item Can lead to overhead when the index table is large or needs to be stored on disk.
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Indexed Allocation and Maximum File Size}
+
+\paragraph{Indexed Allocation}
+In indexed allocation, each file has an index block that stores pointers to the data blocks that hold the actual file data. The maximum file size a scheme using indexed allocation can store depends on the size of the index block and the size of the data blocks.
+
+\paragraph{Formula for Maximum File Size}
+\begin{itemize}
+    \item Let:
+    \begin{itemize}
+        \item $B_d$ = size of each data block.
+        \item $B_i$ = size of the index block.
+        \item $P$ = size of a pointer (usually in bytes, e.g., 4 bytes for 32-bit pointers).
+    \end{itemize}
+    \item The index block can store $\frac{B_i}{P}$ pointers.
+    \item Therefore, the maximum number of data blocks a file can occupy is $\frac{B_i}{P}$.
+    \item Thus, the maximum file size $S_{max}$ is given by:
+    \[
+    S_{max} = \left( \frac{B_i}{P} \right) \times B_d
+    \]
+\end{itemize}
+
+\paragraph{Example Calculation}
+Suppose:
+\begin{itemize}
+    \item Each data block is 4 KB ($B_d = 4096$ bytes).
+    \item The index block is 1 KB ($B_i = 1024$ bytes).
+    \item Each pointer is 4 bytes ($P = 4$ bytes).
+\end{itemize}
+
+Using the formula:
+\[
+S_{max} = \left( \frac{1024}{4} \right) \times 4096 = 256 \times 4096 = 1,048,576 \text{ bytes} = 1 \text{ MB}
+\]
+Thus, the maximum file size that can be stored in this indexed allocation scheme is 1 MB.
+
+
+
+\subsection{Bit Vector and Linked List Algorithms}
+
+\paragraph{Bit Vector Allocation}
+\begin{itemize}
+    \item The bit vector (or bitmap) is a simple data structure used to manage free disk blocks.
+    \item A bit is allocated for each disk block. A value of \texttt{0} indicates that the block is free, while \texttt{1} indicates that the block is in use.
+    \item Advantages:
+    \begin{itemize}
+        \item Simple and efficient for managing free space.
+        \item Fast to locate a free block, especially in systems with contiguous allocation.
+    \end{itemize}
+    \item Disadvantages:
+    \begin{itemize}
+        \item Requires a large amount of memory to store the bit vector, especially for large disk sizes.
+        \item Can be inefficient for sparse disk usage, as it requires a bit for every block.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Linked List Allocation}
+\begin{itemize}
+    \item The linked list algorithm maintains a linked list of free blocks. Each block contains a pointer to the next free block.
+    \item Advantages:
+    \begin{itemize}
+        \item No memory overhead for the bitmap, and it efficiently uses space for sparse allocations.
+        \item Can easily track fragmented free space.
+    \end{itemize}
+    \item Disadvantages:
+    \begin{itemize}
+        \item Slower to locate a free block compared to bit vector because it requires traversing the list.
+        \item Extra storage overhead for maintaining the pointers in each free block.
+    \end{itemize}
+\end{itemize}

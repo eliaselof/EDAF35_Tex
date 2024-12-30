@@ -625,50 +625,13 @@ Allocating memory in the operating system involves several challenges, including
 \end{itemize}
 
 
-\subsection{Module 6 - File System}
-\subsubsection{Red Box}
-\begin{itemize}
-    \item You should understand these two different access methods (13.2.1 and 13.2.2 in Operating System Concepts)
-    \item You should understand what directories are and how they make it possible to organise and access files (13.3 in
-    Operating System Concepts)
-    \item This structure is discussed in the textbook but not very clearly. Try and understand it, but we will not ask
-    questions discussing it directly (Section 14.1 in Operating System Concepts).
-    \item Need to that know that files are represented as blocks and what the FCB/Inode is (Section 14.1 in Operating
-    System Concepts).
-    \item Need to understand what these two tables are and how calls like open() and read() use and update this table
-    (Section 14.2.2 in Operating System Concepts)
-    \item Understand these three different allocation methods and their relative advantages and disadvantages (Section
-    14.4 in Operating System Concepts)
-    \item Be able to calculate maximum file size a scheme like this can store (Section 14.4.3 in Operating System Concepts)
-    \item Understand these two algorithms and their advantages and disadvantages (Section 14.5.1 and 14.5.2 in
-    Operating System Concepts)
-\end{itemize}
+\input{module6fs.tex}
 
 
-\subsection{Module 6 - I/O Systems}
-\subsubsection{Red Box}
-\begin{itemize}
-    \item Need to be able to know what memory mapped I/O is and the motivation for why we use. (Section 12.2.1 in
-    Operating System Concepts)
-    \item You need to understand how these three different methods work and the motivations for each. (Section 12.2.2,
-    12.2.3 and 12.2.4 in Operating System Concepts)
-    \item You need to understand the differences and needs for these different interfaces. (Section 12.3.1 to 12.3.4 in
-    Operating System Concepts)
-    \item Make sure you understand this flow as it encompasses most of what we have spoken about today. (Section 12.5
-    in Operating System Concepts)
-\end{itemize}
+\input{module6io.tex}
 
 
-\subsection{Module 7 - Protection and Security}
-\subsubsection{Red Box!}
-\begin{itemize}
-    \item You be able to describe what a domain of protection is and give examples of some different domains and
-    objects (Section 17.4 in Operating System Concepts)
-    \item You should be able to describe what the access matrix is, how it relates to domains of protection and how it can be implemented – you will not be asked about
-    the lock and key mechanism, and only on the basics of capability lists (Section 17.5 and 17.6 in Operating System Concepts)
-    \item Maintaining system security is very complicated and understanding this could require a whole courses – you will
-    not be asked on this in the exam
-\end{itemize}
+\input{module7.tex}
 
 
 
