@@ -331,30 +331,131 @@ A solution to this problem must satisfy the following:
 
 
 
-\subsection{Module 4 - Memory Management}
-\subsubsection{Red Box}
+\section{Module 4 - Memory Management}
+\subsection{Red Box}
 \begin{itemize}
-    \item YOU NEED TO UNDERSTAND WHAT THE PHYSICAL AND LOGIC ADDRESS SPACE IS AND THE MOTIVATION BEHIND IT. YOU ALSO NEED TO UNDERSTAND THAT
-    THE MMU IS REQUIRED TO TRANSLATE BETWEEN THE TWO (9.1.1 TO 9.1.4 IN OPERATING SYSTEM CONCEPTS
-    \item YOU NEED TO UNDERSTAND WHAT CONTIGOUS ALLOCATION IS, HOW IT WORKS AND WHY FRAGMENTATION IS A MAJOR ISSUE.
-    (SECTION 9.2 IN OPERATING SYSTEM CONCEPTS)
-    \item YOU NEED TO UNDERSTAND WHAT PAGING IS, WHAT THE PAGE TABLE AND TLB ARE, AND HAVE A GENERAL IDEA OF WHAT PROTECTION AND SHARED
-    PAGES ARE (SECTION 9.2 IN OPERATING SYSTEM CONCEPTS
-    \item YOU NEED TO KNOW WHY WE CANNOT USE SIMPLE PAGE TABLES, THE THREE ALTERNATIVE PAGE TABLE STRUCTURES AND THE ADVANTAGES AND
-    DISADVANTAGES OF EACH (SECTION 9.4 OF OPERATING SYSTEM CONCEPTS
-    \item YOU NEED TO UNDERSTAND THE BASIC CONCEPTS OF VIRTUAL MEMORY AND ITS ADVANTAGES(SECTION 10.1 OF OPERATING SYSTEM CONCEPTS)
-    \item YOU NEED TO BE ABLE TO EXPLAIN WHAT DEMAND PAGING IS, FREE FRAME LIST AND ITS PERFORMANCE (SECTION 10.2 OF OPERATING SYSTEM CONCEPTS
-    \item YOU NEED TO KNOW WHAT PAGE REPLACEMENT IS, UNDERSTAND THE MAIN THREE DIFFERENT PAGE REPLACEMENT ALGORITHMS DISCUSSED IN THE BOOK
-    AND THEIR TRADEOFFS, AND BE ABLE TO DESCRIBE BELADY’S ANOMALY (SECTION 10.4 OF OPERATING SYSTEM CONCEPTS
+    \item You need to understand what the physical and logic address space is and the motivation behind it. You also need to understand that
+    the mmu is required to translate between the two (9.1.1 to 9.1.4 in operating system concepts).
+    \item You need to understand what contigous allocation is, how it works and why fragmentation is a major issue.
+    (section 9.2 in operating system concepts)
+    \item You need to understand what paging is, what the page table and tlb are,
+    and have a general idea of what protection and shared
+    pages are (section 9.2 in operating system concepts).
+    \item You need to know why we cannot use simple page tables, the three alternative page table structures and the advantages and
+    disadvantages of each (section 9.4 of operating system concepts).
+    \item You need to understand the basic concepts of virtual memory and its advantages(section 10.1 of operating system concepts).
+    \item You need to be able to explain what demand paging is, free frame list and its performance (section 10.2 of operating system concepts).
+    \item You need to know what page replacement is, understand the main three different page replacement algorithms discussed in the book
+    and their tradeoffs, and be able to describe belady’s anomaly (section 10.4 of operating system concepts).
 \end{itemize}
 
 
+\subsection{Physical and logic address space and MMU}
 
-\subsection{Module 4 pt 2 - Memory Management Additional Slides}
-\subsubsection{Red Box}
+The physical address space refers to the actual addresses in the RAM (hardware memory), 
+while the logical address space refers to the addresses used by programs during execution, 
+which are mapped to physical addresses by the operating system.
+\newline
+
+{\bf Key differences:}
 \begin{itemize}
-    \item YOU NEED TO KNOW THE CHALLENGES WITH ALLOCATING MEMORY IN THE OPERATING SYSTEM AND THE DIFFERENCES BETWEEN THE SLAB AND THE BUDDY
-    ALLOCATER (SECTION 10.8 OF OPERATING SYSTEM CONCEPTS)
+    \item {\bf Physical Address:} Actual memory locations in RAM.
+    \item {\bf Logical Address:} Virtual addresses used by programs.
+    \item {\bf Mapping: } Logical addresses are mapped to physical addresses by the MMU.
+\end{itemize}
+
+{\bf Reason:}
+\begin{itemize}
+    \item {\bf Isolation \& Protection:} Logical addresses allow programs to operate in isolated, virtualized memory spaces, preventing interference between programs.
+    \item {\bf Efficient Memory Use:} Virtual memory lets programs use more memory than physically available by swapping data between RAM and disk storage.
+\end{itemize}
+
+The MMU (Memory Management Unit) is a hardware component in a computer that manages memory operations,
+specifically the mapping between logical addresses (used by programs) and physical addresses
+(actual memory locations in RAM).
+
+\subsection{Contigous Allocation}
+
+Contiguous allocation is a memory management method where each process is assigned a single, 
+continuous block of memory. 
+It works by allocating a process a large enough, uninterrupted segment of RAM.
+
+{\bf Fragmentation}
+\begin{itemize}
+    \item {\bf External Fragmentation:} Free memory is scattered in small blocks, making it hard to allocate large blocks even though there’s enough total free memory.
+    \item {\bf Internal Fragmentation:} Allocated memory is larger than needed, wasting space within the block.
+\end{itemize}
+Fragmentation leads to wasted memory, inefficient use of available space, and can cause allocation failures, reducing system performance.
+
+\subsection{Paging, Page Table and TLB (Translation Lookaside Buffer)}
+{\bf Paging} is a memory management technique that divides the virtual address space and physical memory into fixed-size blocks called pages (virtual memory) and frames (physical memory). Virtual addresses are translated to physical addresses through a page table.
+\newline
+\newline
+The {\bf page table} is a data structure that maps virtual page numbers to physical frame numbers. It includes additional information like access permissions and whether the page is in memory.
+\newline
+\newline
+The {\bf TLB} is a small, fast cache that stores recently used page table entries. It speeds up address translation by reducing the need to access the page table repeatedly. A TLB hit avoids a slower lookup, while a TLB miss requires accessing the page table.
+
+\subsection{Protected and Shared Pages}
+
+{\bf Protected Pages: } Memory pages with restricted access to prevent unauthorized operations (e.g., writing to read-only pages). Enforced through page table permissions to ensure process isolation and security.
+\newline
+\newline
+{\bf Shared Pages: } Memory pages accessible by multiple processes, allowing shared libraries or interprocess communication. Each process's page table maps to the same physical memory frame.
+
+
+\subsection{Three alternative page table structures}
+
+\subsubsection{Hierarchical Paging}
+Hierarchical paging is a method of managing large page tables by dividing them into smaller, more manageable parts using multiple levels. This approach reduces memory usage for page tables and handles sparsely populated address spaces efficiently.
+
+{\bf How it works:}
+\begin{enumerate}
+    \item {\bf structure}
+    \begin{itemize}
+        \item The page table is split into multiple levels (e.g., two-level, three-level).
+        \item The virtual address is divided into sections, each corresponding to a level in the hierarchy.
+    \end{itemize}
+    \item Translation Steps:
+    \begin{itemize}
+        \item The virtual address is divided into: \begin{itemize}
+            \item Page directory index: Points to the page directory.
+            \item Page table index: Points to the specific page table.
+            \item Offset: Specifies the exact location within the page.
+        \end{itemize}
+    \item The CPU first accesses the page directory to locate the relevant page table.
+    \item Then, it accesses the specific page table to find the physical frame.
+    \end{itemize}
+\end{enumerate}
+
+{\bf Advantages:}
+\begin{itemize}
+    \item Saves memory by only allocating page tables for used address spaces.
+    \item Efficient for sparse virtual memory systems.
+\end{itemize}
+
+{\bf Example for a two-level system:} 
+\\
+A 32-bit address might be divided as: 
+\begin{itemize}
+    \item 10 bits for the page directory,
+    \item 10 bits for the page table,
+    \item 12 bits for the offset within a page.
+    This structure allows addressing large memory while keeping page tables compact.
+\end{itemize}
+
+\subsubsection{Hashed Page Tables}
+
+
+
+\subsubsection{Inverted Page Tables}
+
+
+\section{Module 4 pt 2 - Memory Management Additional Slides}
+\subsection{Red Box}
+\begin{itemize}
+    \item You need to know the challenges with allocating memory in the operating system and the differences between the slab and the buddy
+    allocater (section 10.8 of operating system concepts).
 \end{itemize}
 
 
