@@ -403,6 +403,17 @@ The {\bf TLB} is a small, fast cache that stores recently used page table entrie
 \newline
 {\bf Shared Pages: } Memory pages accessible by multiple processes, allowing shared libraries or interprocess communication. Each process's page table maps to the same physical memory frame.
 
+\subsection{Simple Page Tables}
+
+\paragraph{Why They Are Not Feasible}
+Simple page tables are impractical for systems with large virtual address spaces due to:
+
+\begin{itemize}
+    \item \textbf{High Memory Overhead:} A page table must have one entry per virtual page. For large address spaces, this requires enormous memory.
+    \item \textbf{Inefficiency for Sparse Usage:} Many processes use only a small portion of their address space, leading to wasted memory.
+    \item \textbf{Scalability Issues:} Large page tables are difficult to manage and update, especially with multiple processes.
+    \item \textbf{Performance Impact:} Large tables increase latency in address translation and are harder to cache in the TLB.
+\end{itemize}
 
 \subsection{Three alternative page table structures}
 
@@ -446,9 +457,140 @@ A 32-bit address might be divided as:
 
 \subsubsection{Hashed Page Tables}
 
+Hashed page tables are a memory management scheme designed for systems with large address spaces. Instead of using a hierarchical structure, they utilize a hash table to efficiently map virtual addresses to physical frames.
 
+\paragraph{How It Works}
+\begin{enumerate}
+    \item \textbf{Hash Function:}
+    \begin{itemize}
+        \item A hash function computes an index from the virtual page number.
+        \item This index points to a linked list (or bucket) of entries in the hash table.
+    \end{itemize}
+
+    \item \textbf{Entries:}
+    \begin{itemize}
+        \item Each entry contains:
+        \begin{itemize}
+            \item Virtual page number.
+            \item Corresponding physical frame number.
+            \item A pointer to the next entry (in case of collisions).
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Translation:}
+    \begin{itemize}
+        \item When a process needs to access memory, the virtual page number is hashed.
+        \item The system searches the bucket for a matching entry.
+        \item If found, the physical frame number is retrieved, and the memory is accessed.
+    \end{itemize}
+\end{enumerate}
+
+\paragraph{Advantages}
+\begin{itemize}
+    \item Efficient for large and sparse address spaces.
+    \item Reduces the memory overhead of traditional page tables.
+\end{itemize}
+
+\paragraph{Disadvantages}
+\begin{itemize}
+    \item Slower in the case of hash collisions, as it requires traversing a linked list.
+    \item Slightly more complex than simple or hierarchical page tables.
+\end{itemize}
 
 \subsubsection{Inverted Page Tables}
+
+Inverted page tables are a memory management technique used to reduce the memory overhead of traditional page tables by storing a single global page table for the entire system, rather than one table per process.
+
+\paragraph{How It Works}
+\begin{enumerate}
+    \item \textbf{Structure:}
+    \begin{itemize}
+        \item Each entry in the inverted page table corresponds to a physical frame in memory.
+        \item Entries contain:
+        \begin{itemize}
+            \item Virtual page number.
+            \item Process ID (to identify which process owns the page).
+            \item Control bits (e.g., valid, protection).
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Translation:}
+    \begin{itemize}
+        \item When a virtual address needs to be translated:
+        \begin{enumerate}
+            \item The system searches the inverted page table for an entry matching the virtual page number and process ID.
+            \item If a match is found, the corresponding physical frame number is used to access memory.
+            \item If no match is found, a page fault occurs.
+        \end{enumerate}
+    \end{itemize}
+\end{enumerate}
+
+\paragraph{Advantages}
+\begin{itemize}
+    \item Significantly reduces memory usage by having a single global page table.
+    \item Efficient for systems with large address spaces.
+\end{itemize}
+
+\paragraph{Disadvantages}
+\begin{itemize}
+    \item Slower lookups due to the need for searching the entire table (typically mitigated using hashing).
+    \item More complex compared to traditional page tables.
+\end{itemize}
+
+\subsection{Virtual Memory}
+
+Virtual memory is a technique that allows processes to use more memory than physically available by using disk storage as an extension of RAM. 
+
+\paragraph{Advantages}
+\begin{itemize}
+    \item Provides process isolation and memory protection.
+    \item Enables efficient utilization of physical memory.
+    \item Supports large address spaces, allowing programs to run regardless of physical memory size.
+    \item Facilitates multiprogramming by allowing multiple processes to share memory safely.
+\end{itemize}
+
+\subsection{Demand Paging and Free Frame List}
+
+\paragraph{Demand Paging}
+Demand paging is a technique where pages are loaded into memory only when they are needed, rather than preloading all pages. This reduces memory usage and improves efficiency.
+
+\paragraph{Free Frame List}
+The free frame list is a data structure that keeps track of available physical memory frames. When a new page needs to be loaded, a frame is allocated from this list.
+
+\paragraph{Performance}
+\begin{itemize}
+    \item Efficient for systems with limited physical memory.
+    \item Performance depends on page fault frequency; high page fault rates can lead to significant delays.
+    \item Optimized by using algorithms to minimize page faults and manage the free frame list effectively.
+\end{itemize}
+
+\subsection{Page Replacement and Algorithms}
+
+\paragraph{Page Replacement}
+Page replacement is the process of selecting which memory page to remove from physical memory to make space for a new page when memory is full. 
+
+\paragraph{Page Replacement Algorithms}
+The three main algorithms and their tradeoffs are:
+\begin{itemize}
+    \item \textbf{FIFO (First-In-First-Out):}
+    \begin{itemize}
+        \item Removes the oldest page.
+        \item Simple but may lead to poor performance due to frequent page faults.
+    \end{itemize}
+    \item \textbf{Optimal (OPT):}
+    \begin{itemize}
+        \item Removes the page that will not be used for the longest time.
+        \item Provides the best performance but is impractical for real systems since it requires future knowledge of memory accesses.
+    \end{itemize}
+    \item \textbf{LRU (Least Recently Used):}
+    \begin{itemize}
+        \item Removes the least recently used page.
+        \item Performs well in practice but requires additional overhead to track page usage.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Belady’s Anomaly}
+Belady’s anomaly is a phenomenon where increasing the number of frames in memory leads to more page faults, observed in some algorithms like FIFO but not in algorithms like LRU or OPT.
 
 
 \section{Module 4 pt 2 - Memory Management Additional Slides}
@@ -456,6 +598,30 @@ A 32-bit address might be divided as:
 \begin{itemize}
     \item You need to know the challenges with allocating memory in the operating system and the differences between the slab and the buddy
     allocater (section 10.8 of operating system concepts).
+\end{itemize}
+
+\subsection{Memory Allocation and Allocators}
+
+\paragraph{Challenges in Memory Allocation}
+Allocating memory in the operating system involves several challenges, including:
+\begin{itemize}
+    \item \textbf{Fragmentation:} Ensuring efficient utilization of memory and minimizing internal and external fragmentation.
+    \item \textbf{Performance:} Balancing fast allocation/deallocation with efficient memory usage.
+    \item \textbf{Scalability:} Handling memory allocation efficiently as the system scales.
+\end{itemize}
+
+\paragraph{Slab Allocator}
+\begin{itemize}
+    \item Allocates memory in fixed-size chunks called \textit{slabs}.
+    \item Efficient for frequently used objects of the same size.
+    \item Reduces fragmentation and improves cache performance.
+\end{itemize}
+
+\paragraph{Buddy Allocator}
+\begin{itemize}
+    \item Divides memory into blocks of sizes that are powers of two.
+    \item Splits or merges blocks to fit memory requests.
+    \item Simple and fast but may suffer from internal fragmentation.
 \end{itemize}
 
 
@@ -496,7 +662,7 @@ A 32-bit address might be divided as:
 \subsection{Module 7 - Protection and Security}
 \subsubsection{Red Box!}
 \begin{itemize}
-    \item You should be able to describe what a domain of protection is and give examples of some different domains and
+    \item You be able to describe what a domain of protection is and give examples of some different domains and
     objects (Section 17.4 in Operating System Concepts)
     \item You should be able to describe what the access matrix is, how it relates to domains of protection and how it can be implemented – you will not be asked about
     the lock and key mechanism, and only on the basics of capability lists (Section 17.5 and 17.6 in Operating System Concepts)
@@ -506,8 +672,8 @@ A 32-bit address might be divided as:
 
 
 
-\subsection{Module 8 - Virtualisation and Virtual Machines}
-\subsubsection{Red Box}
+\section{Module 8 - Virtualisation and Virtual Machines}
+\subsection{Red Box}
 \begin{itemize}
     \item You should know what virtualisation means and be able to briefly describe a few types of virtualisation eg: VMs,
     Virtual Networks, Virtual Disks and Virtual Memory
@@ -515,5 +681,69 @@ A 32-bit address might be divided as:
     hypervisors), Emulation and Containers. (Section 18.5.3, 18.5.4, 18.5.7 and 18.5.8 in Operating System Concepts)
 \end{itemize}
 
+\subsection{Types of Virtualization}
+
+\paragraph{Virtualization}
+Virtualization refers to the creation of virtual versions of physical resources, allowing multiple instances of those resources to be managed and used independently.
+
+\paragraph{Types of Virtualization}
+\begin{itemize}
+    \item \textbf{Virtual Machines (VMs):} 
+    \begin{itemize}
+        \item Emulate an entire physical computer, running an operating system and applications.
+        \item Provides isolation and resource management for different environments.
+    \end{itemize}
+    
+    \item \textbf{Virtual Networks:} 
+    \begin{itemize}
+        \item Simulate network environments within physical infrastructure.
+        \item Enables secure, isolated communication between virtualized systems.
+    \end{itemize}
+
+    \item \textbf{Virtual Disks:} 
+    \begin{itemize}
+        \item Emulate physical storage devices, enabling the creation and management of virtual storage.
+        \item Allows efficient storage management and migration of data between systems.
+    \end{itemize}
+
+    \item \textbf{Virtual Memory:} 
+    \begin{itemize}
+        \item Extends the physical memory of a system using disk storage.
+        \item Allows larger processes to run by providing the illusion of more memory.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Types of Virtual Machines (VMs)}
+
+\paragraph{Difference Between VM Types}
+There are various types of virtual machines, each serving different purposes based on how they are implemented and managed.
+
+\paragraph{Type 1 Hypervisor (Bare-metal Hypervisor)}
+\begin{itemize}
+    \item Runs directly on the physical hardware without an underlying operating system.
+    \item More efficient and secure since it interacts directly with the hardware.
+    \item Examples: VMware ESXi, Microsoft Hyper-V, Xen.
+\end{itemize}
+
+\paragraph{Type 2 Hypervisor (Hosted Hypervisor)}
+\begin{itemize}
+    \item Runs on top of a host operating system.
+    \item Less efficient due to the extra layer between the hardware and the virtual machines.
+    \item Examples: VMware Workstation, VirtualBox.
+\end{itemize}
+
+\paragraph{Emulation}
+\begin{itemize}
+    \item Mimics hardware to allow software designed for one architecture to run on another.
+    \item Less efficient due to the overhead of simulating hardware.
+    \item Examples: QEMU, VirtualBox.
+\end{itemize}
+
+\paragraph{Containers}
+\begin{itemize}
+    \item Lightweight virtualization that shares the host operating system's kernel.
+    \item Offers fast performance and efficient resource use, but lacks the full isolation of VMs.
+    \item Examples: Docker, Kubernetes.
+\end{itemize}
 
 \end{document}
